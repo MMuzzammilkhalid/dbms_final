@@ -1,0 +1,23 @@
+[
+    {
+        "Roll No": "1",
+        "fname": "muzammil",
+        "lname": "khalid",
+        "address": "fb area",
+        "class": "X"
+    },
+    {
+        "Roll No": "2",
+        "fname": "misbah",
+        "lname": "hassan",
+        "address": "nazimabad",
+        "class": "IX"
+    },
+    {
+        "Roll No": "3",
+        "fname": "shahmir",
+        "lname": "khan",
+        "address": "johar",
+        "class": "V"
+    }
+]
