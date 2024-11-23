@@ -1,19 +1,22 @@
+# Importing necessary modules. The `os` module is used to interact with the file system for listing and managing files.
+# Custom modules `file_manager` and `database_operations` are used to handle file-level operations and database-specific 
+# operations such as adding, editing, and deleting records.
 import os
 import file_manager as fm
 import database_operations as db_ops
 
-
+# This function displays the main menu for the Simple DBMS application. It provides options for users to create a new database, 
+# open an existing one, delete a database, or exit the program. The menu is shown repeatedly until the user selects "Exit."
 def main_menu():
-    """Displays the main menu options."""
     print("\nSimple DBMS Main Menu")
     print("1. Create a new database")
     print("2. Open an existing database")
     print("3. Delete a database")
     print("4. Exit")
 
-
+# The database menu function displays additional options once a specific database is opened. 
+# Users can add new records, edit existing ones, delete records, view all records, or go back to the main menu.
 def database_menu(db_name):
-    """Displays the database menu options."""
     print(f"\nDatabase Menu - {db_name}")
     print("1. Add a record")
     print("2. Edit a record")
@@ -21,9 +24,10 @@ def database_menu(db_name):
     print("4. View all records")
     print("5. Back to Main Menu")
 
-
+# The create_database function allows users to create a new database. It prompts the user to provide a database name 
+# and define its structure by specifying field names and their maximum lengths. The function validates the inputs, 
+# ensures the database doesn't already exist, and uses the file_manager module to create necessary files.
 def create_database():
-    """Creates a new database."""
     db_name = input("Enter the name of the new database: ").strip()
     if not db_name:
         print("Database name cannot be empty!")
@@ -47,6 +51,9 @@ def create_database():
 
         try:
             max_length = int(input(f"Enter maximum length for field '{field_name}': "))
+            if max_length <= 0:
+                print("Maximum length must be a positive integer.")
+                continue
             fields[field_name] = max_length
         except ValueError:
             print("Please enter a valid integer for field length.")
@@ -57,10 +64,13 @@ def create_database():
             print(f"Database '{db_name}' created successfully with fields: {fields}")
         else:
             print(f"Failed to create database '{db_name}'.")
+    else:
+        print("No fields defined. Database creation aborted.")
 
-
+# This function displays a list of all available databases by scanning the current directory for database files. 
+# Each database is identified by a system file that ends with '_system.json'. If no databases are found, 
+# the user is informed accordingly.
 def display_databases():
-    """Displays all available databases."""
     databases = [file.replace('_system.json', '') for file in os.listdir() if file.endswith('_system.json')]
     if not databases:
         print("No databases found.")
@@ -69,9 +79,11 @@ def display_databases():
         for i, db in enumerate(databases, start=1):
             print(f"{i}. {db}")
 
-
+# The open_database function allows users to interact with an existing database. 
+# It displays the list of databases, lets the user select one, and then presents a database menu for further actions 
+# like adding, editing, deleting, or viewing records. The function validates user inputs and performs corresponding operations 
+# through the database_operations module.
 def open_database():
-    """Opens an existing database."""
     databases = [file.replace('_system.json', '') for file in os.listdir() if file.endswith('_system.json')]
 
     if not databases:
@@ -110,9 +122,9 @@ def open_database():
         else:
             print("Invalid choice. Please try again.")
 
-
+# The delete_database function allows users to remove an existing database. It lists all databases, lets the user select one, 
+# and asks for confirmation before proceeding with deletion. The deletion process is handled by the file_manager module.
 def delete_database():
-    """Deletes an existing database."""
     databases = [file.replace('_system.json', '') for file in os.listdir() if file.endswith('_system.json')]
 
     if not databases:
@@ -132,9 +144,10 @@ def delete_database():
     else:
         print("Deletion canceled.")
 
-
+# The run_cli function serves as the entry point for the Simple DBMS application. 
+# It displays the main menu and executes the corresponding functionality based on user input. 
+# The loop continues until the user selects the "Exit" option.
 def run_cli():
-    """Runs the command-line interface for the Simple DBMS."""
     while True:
         main_menu()
         option = input("Select an option: ").strip()
@@ -151,6 +164,6 @@ def run_cli():
         else:
             print("Invalid option, please try again.")
 
-
+# This condition ensures the script runs the CLI only when executed directly (not when imported as a module).
 if __name__ == "__main__":
     run_cli()

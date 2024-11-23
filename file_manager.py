@@ -1,23 +1,24 @@
+# Importing necessary modules for managing database files.
+# The `json` module is used to read and write data in JSON format, enabling structured storage and retrieval.
+# The `os` module is used for file system operations such as checking for file existence and deleting files.
 import json
 import os
 
 
+# This function deletes a database by removing its associated data and system files.
+# It ensures both the data file (storing records) and the system file (storing metadata) are deleted if they exist.
+# If a file is not found or an error occurs during deletion, the function handles it gracefully and notifies the user.
 def delete_database(db_name):
-    """
-    Deletes the specified database by removing its associated files.
-    """
     data_file = f"{db_name}_data.json"
     system_file = f"{db_name}_system.json"
 
     try:
-        # Remove the data file if it exists
         if os.path.exists(data_file):
             os.remove(data_file)
             print(f"Deleted data file: {data_file}")
         else:
             print(f"Data file '{data_file}' not found.")
 
-        # Remove the system file if it exists
         if os.path.exists(system_file):
             os.remove(system_file)
             print(f"Deleted system file: {system_file}")
@@ -29,10 +30,10 @@ def delete_database(db_name):
         print(f"Error deleting database '{db_name}': {e}")
 
 
+# This function creates the necessary files for a new database.
+# The system file stores metadata about the database (e.g., field names and maximum lengths), while the data file is
+# initialized as an empty list to store records. If file creation fails, it returns a failure indication.
 def create_database_files(db_name, fields):
-    """
-    Creates the necessary files for a new database, including data and system files.
-    """
     data_file = f"{db_name}_data.json"
     system_file = f"{db_name}_system.json"
 
@@ -48,10 +49,9 @@ def create_database_files(db_name, fields):
         return False  # Indicate failure
 
 
+# This function loads the system file of a database, which contains its metadata (e.g., field definitions and constraints).
+# If the file does not exist or is corrupted, it handles the situation gracefully by returning `None` and notifying the user.
 def load_system_file(db_name):
-    """
-    Loads the system file (metadata) for the specified database.
-    """
     system_file = f"{db_name}_system.json"
     if not os.path.exists(system_file):
         print(f"System file for database '{db_name}' not found.")
@@ -65,10 +65,10 @@ def load_system_file(db_name):
         return None
 
 
+# This function loads the data file of a database, which stores the records in JSON format.
+# If the file does not exist, it returns an empty list. It also handles file corruption by notifying the user
+# and returning an empty list as a fallback.
 def load_data_file(db_name):
-    """
-    Loads the data file (records) for the specified database.
-    """
     data_file = f"{db_name}_data.json"
     if not os.path.exists(data_file):
         print(f"Data file for database '{db_name}' not found.")
@@ -82,10 +82,10 @@ def load_data_file(db_name):
         return []
 
 
+# This function saves a list of records to the data file of a database.
+# It ensures data is written in a structured JSON format, and any I/O errors during the save process
+# are caught and reported to the user.
 def save_data_file(db_name, records):
-    """
-    Saves the records to the data file for the specified database.
-    """
     data_file = f"{db_name}_data.json"
 
     try:
@@ -96,19 +96,18 @@ def save_data_file(db_name, records):
         print(f"Error saving records to '{db_name}_data.json': {e}")
 
 
+# This function checks whether the necessary files for a database (data and system files) exist.
+# It returns `True` if both files are found, indicating that the database is intact; otherwise, it returns `False`.
 def database_exists(db_name):
-    """
-    Checks if the database files for the specified database exist.
-    """
     system_file = f"{db_name}_system.json"
     data_file = f"{db_name}_data.json"
     return os.path.exists(system_file) and os.path.exists(data_file)
 
 
+# This function loads both the system file (metadata) and data file (records) for a specified database.
+# It returns the metadata and records if successful. If the system file is missing or corrupted, it returns
+# `None` for both and notifies the user.
 def load_database_files(db_name):
-    """
-    Loads both the system and data files for the specified database.
-    """
     fields = load_system_file(db_name)
     if fields is None:
         return None, None
@@ -117,10 +116,11 @@ def load_database_files(db_name):
     return fields, records
 
 
-# Test function (optional, for demonstration)
+# The following block demonstrates the usage of these functions.
+# It creates a test database, performs basic operations, and demonstrates database management tasks.
 if __name__ == "__main__":
     db_name = "example_db"
-    fields = {"name": 50, "age": 3, "email": 100}
+    fields = {"name": 50, "age": 3, "email": 100}  # Field definitions with maximum lengths
 
     print("Creating a database...")
     create_database_files(db_name, fields)
