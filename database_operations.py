@@ -78,16 +78,21 @@ def add_record(db_name):
     for field, max_length in fields.items():
         while True:
             value = input(f"Enter value for '{field}' (max {max_length} chars): ").strip()
-            if len(value) > max_length:
+            if not value:
+                print(f"Error: '{field}' cannot be empty. Please enter a value.")
+            elif len(value) > max_length:
                 print(f"Value for '{field}' exceeds maximum length of {max_length}.")
             else:
                 record[field] = value
                 break
 
-    records = load_data_file(db_name)
-    records.append(record)
-    save_data_file(db_name, records)
-    print("Record added successfully.")
+    if not record:  # If no valid record is added, show an appropriate message
+        print("No valid data entered. Record not added.")
+    else:
+        records = load_data_file(db_name)
+        records.append(record)
+        save_data_file(db_name, records)
+        print("Record added successfully.")
 
 # This function displays all the records stored in a database in a tabular format. 
 # It calculates the column widths dynamically to ensure proper alignment of data. If no records are found, it notifies the user.
